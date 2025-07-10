@@ -8,6 +8,12 @@
 sudo sudo su
 ```
 
+### Delete All Files Except One
+
+```
+find . -type f ! -name "file_to_keep" -delete
+```
+
 ## Networking
 
 ### DNS Lookup
@@ -90,19 +96,19 @@ dd if=/dev/zero of=output.file bs=1M count=10240
 
 ## NFS
 
-#### Mount over NFSv4 (IPv4)
+### Mount over NFSv4 (IPv4)
 
 ```
 mount -t nfs -o proto=tcp,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
 ```
 
-#### Mount over NFSv4 (IPv6)
+### Mount over NFSv4 (IPv6)
 
 ```
 mount -t nfs -o proto=tcp6,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
 ```
 
-#### Show NFS Statistics
+### Show NFS Statistics
 
 Show only the client:
 ```
@@ -116,7 +122,7 @@ nfsstat -s
 
 ## Debugging Processes
 
-#### Find Stack Traces of Threads
+### Find Stack Traces of Threads
 
 ```
 PID=2038
@@ -126,13 +132,13 @@ for tid in $(ls /proc/$PID/task); do
 done
 ```
 
-#### Show Open Files for a Process
+### Show Open Files for a Process
 
 ```
 lsof -p <pid>
 ```
 
-#### Attach strace to a Running Process
+### Attach strace to a Running Process
 
 ```
 strace -p <pid> -s 100 -f
