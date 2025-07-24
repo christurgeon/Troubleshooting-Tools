@@ -70,6 +70,12 @@ iptables -S
 ping6 -c 1 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal
 ```
 
+### Report RPC Information about a Host
+
+```
+rpcinfo -p fs-09b63558bcee5dd19.fsx.us-east-1.aws.internal
+```
+
 ### Generate a TCP Dump
 
 Consider using WireShark to investigate the `.pcap` files
