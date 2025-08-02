@@ -14,6 +14,12 @@ sudo sudo su
 find . -type f ! -name "file_to_keep" -delete
 ```
 
+### Start the SSH Agent (if not already running)
+
+```
+eval "$(ssh-agent -s)"
+```
+
 ## Networking
 
 ### DNS Lookup
