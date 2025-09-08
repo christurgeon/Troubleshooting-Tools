@@ -167,3 +167,34 @@ lsof -i :2049
 ```
 top
 ```
+
+## Performance
+
+Consider you see that processes are being OOM-killed. You can check the system logs via:
+
+```
+dmesg | grep -i "out of memory"
+journalctl -k | grep -i "oom"
+```
+
+View free RAM:
+
+```
+free -m  # shows memory in MB
+top      # press M to sort by memory usage
+```
+
+Add temporary swap (it's best to use a fast, local SSD or low-latency cloud SSD volumes):
+
+```
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+Creating swap may hide underlying memory leaks. If you still see the memory growing, remove the swap space via:
+
+```
+sudo swapoff /swapfile && sudo rm /swapfile
+```
