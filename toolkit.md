@@ -199,10 +199,9 @@ Creating swap may hide underlying memory leaks. If you still see the memory grow
 sudo swapoff /swapfile && sudo rm /swapfile
 ```
 
+The following sections were taken from __Systems Performance: Enterprise and the Cloud__ by Brendan Gregg
 
 When debugging issues constraining CPUs, the consider checking the following (Linux):
-
-Source: __Systems Performance: Enterprise and the Cloud__
 
 * `uptime`/`top`: Check the load averages to see if load is increasing or decreasing over time. Bear
 this in mind when using the following tools, as load may be changing during your analysis.
@@ -218,3 +217,16 @@ the CPUs are in use.
 * `perf`: Measure IPC as an indicator of cycle-based inefficiencies.
 * `showboost`/`turboboost`: Check the current CPU clock rates, in case they are unusually low.
 * `dmesg`: Check for CPU temperature stall messages (“cpu clock throttled”).
+
+uptime(1) is one of several commands that print the system load averages:
+
+```
+$ uptime
+9:04pm up 268 day(s), 10:16, 2 users, load average: 7.76, 8.32, 8.60
+```
+
+The last three numbers are the 1-, 5-, and 15-minute load averages. By comparing the three num-
+bers, you can determine if the load is increasing, decreasing, or steady during the last 15 minutes
+(or so). This can be useful to know: if you are responding to a production performance issue and
+find that the load is decreasing, you may have missed the issue; if the load is increasing, the issue
+may be getting worse!
