@@ -225,8 +225,5 @@ $ uptime
 9:04pm up 268 day(s), 10:16, 2 users, load average: 7.76, 8.32, 8.60
 ```
 
-The last three numbers are the 1-, 5-, and 15-minute load averages. By comparing the three num-
-bers, you can determine if the load is increasing, decreasing, or steady during the last 15 minutes
-(or so). This can be useful to know: if you are responding to a production performance issue and
-find that the load is decreasing, you may have missed the issue; if the load is increasing, the issue
-may be getting worse!
+The last three numbers are the 1-, 5-, and 15-minute load averages. By comparing the three numbers, you can determine if the load is increasing, decreasing, or steady during the last 15 minutes
+(or so). This can be useful to know: if you are responding to a production performance issue and find that the load is decreasing, you may have missed the issue; if the load is increasing, the issue may be getting worse!
