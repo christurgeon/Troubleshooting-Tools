@@ -227,3 +227,40 @@ $ uptime
 
 The last three numbers are the 1-, 5-, and 15-minute load averages. By comparing the three numbers, you can determine if the load is increasing, decreasing, or steady during the last 15 minutes
 (or so). This can be useful to know: if you are responding to a production performance issue and find that the load is decreasing, you may have missed the issue; if the load is increasing, the issue may be getting worse!
+
+The virtual memory statistics command, vmstat(8), prints system-wide CPU averages in the last few columns, and a count of runnable threads in the first column. Here is example output from the Linux version:
+
+```
+$ vmstat 1
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+r b swpd free buff cache si so bi bo in cs us sy id wa st
+15 0 0 451732 70588 866628 0 0 1 10 43 38 2 1 97 0 0
+15 0 0 450968 70588 866628 0 0 0 612 1064 2969 72 28 0 0 0
+15 0 0 450660 70588 866632 0 0 0 0 961 2932 72 28 0 0 0
+15 0 0 450952 70588 866632 0 0 0 0 1015 3238 74 26 0 0 0
+[...]
+```
+
+The first line of output is supposed to be the summary-since-boot. However, on Linux the procs and memory columns begin by showing the current state. CPU-related columns are:
+- r: Run-queue length—the total number of runnable threads
+- us: User-time percent
+- sy: System-time (kernel) percent
+- id: Idle percent
+- wa: Wait I/O percent, which measures CPU idle when threads are blocked on disk I/O
+- st: Stolen percent, which for virtualized environments shows CPU time spent servicing other tenants
+
+All of these values are system-wide averages across all CPUs, with the exception of r, which is the total. On Linux, the r column is the total number of tasks waiting plus those running.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
