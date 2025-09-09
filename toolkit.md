@@ -106,6 +106,23 @@ dd if=/dev/zero of=output.file bs=1G count=10
 dd if=/dev/zero of=output.file bs=1M count=10240
 ```
 
+Checking disk usage
+
+```
+df -h  # disk usage
+df -i  # inode usage
+```
+
+Checking disk space used
+
+```
+du -h
+```
+
+The `df` command provides an estimate for how much space is being utilized on your filesystem. The `du` command is a much more accurate snapshot of a given directory or subdirectory. 
+
+A live example is if you get an error trying to install somthing in `/var` that says the directory is full, you can run the `df` command to confirm that the directory is full. After validating this, you can run `du` through subdirectories to find the culprit.
+
 ## NFS
 
 ### Mount over NFSv4 (IPv4)
