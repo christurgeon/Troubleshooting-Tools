@@ -332,4 +332,20 @@ LISTEN    0         100                   127.0.0.0:25               0.0.0.0:*  
 ...
 ```
 
+#### Look at Startup/Deployment Artifacts
 
+Check `/etc/systemd/system/`, `/etc/init.d/`, or `/etc/supervisor/` configs.
+
+Look at `/opt/`, `/srv/`, `/var/lib/`, `/usr/local/` for custom app directories.
+
+#### Check Logs
+
+Application logs often live in `/var/log/` or a custom directory.
+
+A busy/active log file can hint at the primary app:
+
+```
+# ls with the options -h (human readable), -l (long listing view), -t (newest modification time first)
+
+ls -lth /var/log/
+```
