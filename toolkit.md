@@ -275,8 +275,14 @@ You're dropped onto a box and you want to discover what the critical application
 
 #### Look at Running Processes
 
+Try one or both of the following:
+
 ```
 ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -20
+```
+
+```
+top
 ```
 
 The “core app” will usually be the long-running process (or set of processes) consuming the most CPU/memory or owned by a special service account.
