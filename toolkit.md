@@ -247,37 +247,83 @@ The last three numbers are the 1-, 5-, and 15-minute load averages. By comparing
 
 The virtual memory statistics command, vmstat(8), prints system-wide CPU averages in the last few columns, and a count of runnable threads in the first column. Here is example output from the Linux version:
 
+Sample sizes every 1 second
 ```
-$ vmstat 1
+[root /]# vmstat 1
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
-r b swpd free buff cache si so bi bo in cs us sy id wa st
-15 0 0 451732 70588 866628 0 0 1 10 43 38 2 1 97 0 0
-15 0 0 450968 70588 866628 0 0 0 612 1064 2969 72 28 0 0 0
-15 0 0 450660 70588 866632 0 0 0 0 961 2932 72 28 0 0 0
-15 0 0 450952 70588 866632 0 0 0 0 1015 3238 74 26 0 0 0
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 0  0      0 4348244  56692 2060040    0    0   139    19   87  129  9  6 86  0  0
+ 0  0      0 4348216  56692 2060064    0    0     0     4 2556 4754  4  4 92  0  0
+ 1  0      0 4347588  56692 2060056    0    0     0     4 3039 5254  5  4 91  0  0
+ 0  0      0 4347952  56692 2060064    0    0     0     0 3569 5798  6  6 87  0  0
 [...]
 ```
 
 The first line of output is supposed to be the summary-since-boot. However, on Linux the procs and memory columns begin by showing the current state. CPU-related columns are:
-- r: Run-queue length—the total number of runnable threads
-- us: User-time percent
-- sy: System-time (kernel) percent
-- id: Idle percent
-- wa: Wait I/O percent, which measures CPU idle when threads are blocked on disk I/O
-- st: Stolen percent, which for virtualized environments shows CPU time spent servicing other tenants
+- `r`: Run-queue length—the total number of runnable threads
+- `us`: User-time percent
+- `sy`: System-time (kernel) percent
+- `id`: Idle percent
+- `wa`: Wait I/O percent, which measures CPU idle when threads are blocked on disk I/O
+- `st`: Stolen percent, which for virtualized environments shows CPU time spent servicing other tenants
 
 All of these values are system-wide averages across all CPUs, with the exception of r, which is the total. On Linux, the r column is the total number of tasks waiting plus those running.
 
+# Debugging Scenarios
 
+You're dropped onto a box and you want to discover what the critical applications running are:
 
+#### Look at Running Processes
 
+```
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head -20
+```
 
+The “core app” will usually be the long-running process (or set of processes) consuming the most CPU/memory or owned by a special service account.
 
+#### Check Which Processes are Supervising oOthers:
 
+```
+pstree -ap
+```
 
+Example output from me running `pstree` from a shell:
 
+```
+systemd,1 --switched-root --system --deserialize 21
+...
+  ├─sshd,5768 -D
+  │   └─sshd,3850
+  │       └─sshd,3898
+  │           └─bash,3899
+  │               └─sudo,4346 sudo su
+  │                   └─sudo,4347 su
+  │                       └─su,4351
+  │                           └─bash,4357
+  │                               └─pstree,19211 -ap
+  ```
 
+#### Check `systemd` Services:
 
+```
+systemctl list-units --type=service --state=running
+```
 
+Look for non-standard services (not `sshd`, `cron`, etc.), e.g. `myapp.service`, `nginx.service`, `postgresql.service`.
+
+#### See what’s Binding to the Network:
+
+```
+ss -lntp
+```
+
+Example output showing some process and its `pid`:
+
+```
+State     Recv-Q    Send-Q            Local Address:Port        Peer Address:Port   Process
+LISTEN    0         128                     0.0.0.0:22               0.0.0.0:*       users:(("sshd",pid=4321,fd=2))
+LISTEN    0         100                   127.0.0.0:25               0.0.0.0:*       users:(("java",pid=1234,fd=12))
+...
+```
 
 
