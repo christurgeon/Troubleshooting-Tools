@@ -123,18 +123,38 @@ The `df` command provides an estimate for how much space is being utilized on yo
 
 A live example is if you get an error trying to install somthing in `/var` that says the directory is full, you can run the `df` command to confirm that the directory is full. After validating this, you can run `du` through subdirectories to find the culprit.
 
-## NFS
+## Filesystems
+
+### Make a Filesystem
+
+Make an `ext4` filesystem on the `/dev/sda1` partition. You'll only want to create a filesystem on a newly partitioned disk or if you are repartitioning an old one. You'll most likely leave your filesystem in a corrupted state if you try to create one on top of an existing one.
+```
+sudo mkfs -t ext4 /dev/sda1
+```
+
+### Symbolic vs. Hard Links
+
+Symbolic links are files that point to filenames. When you modify a symlink, the file also gets modified. Inode numbers are unique to filesystems; you can't have two of the same inode number in a single filesystem, meaning you can't reference a file in a different filesystem by its inode number. However, if you use symlinks, they do not use inode numbers; they use filenames, so they can be referenced across different filesystems.
+```
+ln -s myfile mylink
+```
+A hardlink just creates another file with a link to the same inode. So if you change the file, both see it. If you delete it however, the file would still be accessible through the link. Only the link cound (in ls output) is decreased and once it hits 0 the file is actually deleted.
+```
+ln somefile somelink
+```
 
 ### Mount over NFSv4 (IPv4)
 
 ```
-mount -t nfs -o proto=tcp,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
+mount -t nfs -o proto=tcp,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 \
+fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
 ```
 
 ### Mount over NFSv4 (IPv6)
 
 ```
-mount -t nfs -o proto=tcp6,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
+mount -t nfs -o proto=tcp6,nfsvers=4.1,rsize=1048576,wsize=1048576,timeo=600 \
+fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal:/fsx/ /tmp/fsx
 ```
 
 ### Show NFS Statistics
@@ -349,3 +369,5 @@ A busy/active log file can hint at the primary app:
 
 ls -lth /var/log/
 ```
+
+
