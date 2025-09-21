@@ -52,6 +52,7 @@ Or using `telnet` as a fallback:
 telnet fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal 2049
 ```
 
+
 ### Show Current Network Connections
 
 ```
@@ -61,6 +62,27 @@ ss -tulnp
 Or for specific port:
 ```
 ss -ltnp 'sport = :2049'
+```
+
+Sample output of the `netstat -an` command, which lists all network connections and their status:
+
+```
+$ netstat -an
+Active Internet connections (w/o servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN
+tcp        0      0 192.168.1.10:22         192.168.1.2:54321       ESTABLISHED
+tcp        0      0 192.168.1.10:8080       192.168.1.3:54322       ESTABLISHED
+tcp        0      0 192.168.1.10:3306       192.168.1.5:33002       ESTABLISHED
+tcp        0      0 192.168.1.10:3306       192.168.1.6:33002       ESTABLISHED
+tcp        0      0 192.168.1.10:3306       192.168.1.7:33002       ESTABLISHED
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN
+tcp6       0      0 :::22                   :::*                    LISTEN
+tcp6       0      0 127.0.0.1:631           :::*                    LISTEN
+tcp6       0      0 2001:db8::1:22          2001:db8::2:54321       ESTABLISHED
+tcp6       0      0 2001:db8::1:8080        2001:db8::3:54322       ESTABLISHED
 ```
 
 ### Checking IP Packet Rules
