@@ -134,6 +134,15 @@ ping6 -c 1 fs-0c5b9f6d0190494dd.fsx.us-east-1.aws.internal
 rpcinfo -p fs-09b63558bcee5dd19.fsx.us-east-1.aws.internal
 ```
 
+### Per-Connection Data Transfer
+
+Example output from the `iftop` command:
+```
+1.23Mb  0.12Mb  10.10.10.7:54321 -> 192.168.1.100:80  0.01Mb
+2.45Mb  1.00Mb  10.10.10.8:12345 -> 192.168.1.100:80  0.03Mb
+```
+This will show the data being transferred in real-time between each pair of IPs to give you a sense of the amount of traffic each connection is generating.
+
 ### Generate a TCP Dump
 
 Consider using WireShark to investigate the `.pcap` files
