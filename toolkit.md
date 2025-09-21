@@ -85,6 +85,36 @@ tcp6       0      0 2001:db8::1:22          2001:db8::2:54321       ESTABLISHED
 tcp6       0      0 2001:db8::1:8080        2001:db8::3:54322       ESTABLISHED
 ```
 
+Breakdown of the Columns:
+- **Proto**: Protocol used (TCP or UDP).  
+- **Recv-Q**: Number of bytes in the receive queue.  
+- **Send-Q**: Number of bytes in the send queue.  
+- **Local Address**: Local IP address and port number.  
+- **Foreign Address**: Remote (foreign) IP address and port number.  
+- **State**: The current state of the connection (e.g., `LISTEN`, `ESTABLISHED`, `TIME_WAIT`, `CLOSE_WAIT`, etc.).  
+
+Key Points to Observe:
+- **LISTEN**: The port is open and waiting for incoming connections.  
+- **ESTABLISHED**: An active connection where data is being exchanged.  
+- **Foreign Address**: Displays the IP addresses of connected external systems (e.g., clients, database servers).  
+
+Example Insights:
+- The server is listening on ports:  
+  - `22` (SSH)  
+  - `631` (likely for printing services)  
+  - `80` (HTTP)  
+  - `443` (HTTPS)  
+- Several **established TCP connections** exist to database ports:  
+  - `3306` (default MySQL)  
+  - `5432` (default PostgreSQL)  
+- Connections are active between the local server (e.g., `192.168.1.10`) and other clients (e.g., `192.168.1.2`, `192.168.1.3`).  
+
+What to Look For:
+- **Multiple ESTABLISHED connections on the same port** (e.g., `3306` for DB):  
+  May indicate multiple application requests are waiting on database responses, potentially leading to a bottleneck.  
+- **High number of open connections**:  
+  A very large number of open connections to databases or other services may suggest overload or saturation.  
+
 ### Checking IP Packet Rules
 
 ```
