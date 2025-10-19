@@ -115,6 +115,81 @@ What to Look For:
 - **High number of open connections**:  
   A very large number of open connections to databases or other services may suggest overload or saturation.  
 
+
+
+
+### CPU Binding (Linux)
+
+**Goal:** Improve CPU cache warmth and memory locality by controlling which CPUs a process or thread can run on.
+This helps with performance—especially on **NUMA** (Non-Uniform Memory Access) systems.
+
+#### Types of CPU Binding
+
+#### 1. **CPU Binding**
+
+Bind a process or thread to one or more specific CPUs.
+
+* **Benefits:**
+
+  * Better cache reuse (CPU cache stays “warm”).
+  * Predictable performance.
+
+* **Example – using `taskset`:**
+
+  ```bash
+  # Run a command bound to CPU 0
+  taskset -c 0 ./my_app
+
+  # Bind an existing process (PID 1234) to CPUs 0 and 1
+  taskset -cp 0,1 1234
+  ```
+
+* **Example – using `pthread_setaffinity_np()` in C:**
+
+  ```c
+  cpu_set_t mask;
+  CPU_ZERO(&mask);
+  CPU_SET(2, &mask);
+  pthread_setaffinity_np(pthread_self(), sizeof(mask), &mask);
+  ```
+
+#### 2. **Exclusive CPU Sets**
+
+Partition CPUs so that only certain processes can run on them.
+No other processes will share those CPUs—improving cache and isolation.
+
+* **Implemented via `cpusets` (part of cgroups):**
+
+  ```bash
+  # Create a cpuset cgroup
+  mkdir -p /sys/fs/cgroup/cpuset/my_app
+  cd /sys/fs/cgroup/cpuset/my_app
+
+  # Assign CPUs and memory nodes
+  echo 2-3 > cpuset.cpus
+  echo 0 > cpuset.mems
+
+  # Move process (PID 1234) into this cpuset
+  echo 1234 > cgroup.procs
+  ```
+
+* **Effect:**
+  Only CPUs 2–3 can execute that process. Other tasks cannot use them.
+
+When to Use
+
+* High-performance, latency-sensitive workloads (e.g., real-time apps, databases).
+* NUMA-aware applications to reduce remote memory access.
+* Benchmarking or performance tuning scenarios.
+
+Key Takeaways
+
+* **CPU Binding:** Fix process → CPU(s) to maintain cache locality.
+* **Exclusive CPU Sets:** Reserve CPU(s) for exclusive use via cgroups.
+* Use `taskset` for quick control or **cpusets** for stronger isolation.
+* Especially valuable on **multi-socket** or **NUMA** systems.
+
+
 ### Checking IP Packet Rules
 
 ```
@@ -430,5 +505,3 @@ A busy/active log file can hint at the primary app:
 
 ls -lth /var/log/
 ```
-
-
